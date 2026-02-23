@@ -24,6 +24,7 @@
             Funzione pivot, da fare solo se il problema non è illimitato e esiste un c barrato < 0
 */
 
+#include <algorithm>
 #include <vector>
 #include "simplesso.hpp"
 
@@ -31,8 +32,8 @@
 Simplesso::Simplesso(PL& nuovo_pl)
     : pl{ nuovo_pl }
 {
-    base = trova_base();
-
+    trova_prima_base();
+    fuori_base();
 }
 
 std::vector<int>    Simplesso::trova_identita() {
@@ -63,7 +64,8 @@ std::vector<int>    Simplesso::trova_identita() {
     return unitari;
 }
 
-std::vector<int> Simplesso::trova_base(){
+void Simplesso::trova_prima_base(){
+    base.clear();
     const std::vector<int> identity = trova_identita();
     const auto& A = pl.get_A();
     int rows = A.size();
@@ -75,7 +77,37 @@ std::vector<int> Simplesso::trova_base(){
             base[identity[i]] = i;
         }
     }
-    return base;
+}
+
+void swap_int(int* x1, int* x2){
+    int hold = *x1;
+    *x1 = *x2;
+    *x2 = hold;
+}
+
+void Simplesso::fuori_base() {
+    non_base.clear();
+    const auto& A = pl.get_A();
+    int rows = A.size();
+    int columns = A[0].size();
+    std::vector<int> base_ordinata = base;
+    int sorted = 0;
+
+    while(!sorted){
+        sorted = 1;
+        for (int i = 0; i < base_ordinata.size() - 1; i++) {
+            if (base_ordinata[i] > base_ordinata[i+1]) {
+                swap_int(&base_ordinata[i], &base_ordinata[i+1]);
+                sorted = 0;
+            }
+        }
+    }
+
+    int iteratore_base = 0;
+    for (int i = 0; i < columns; i++) {
+        if (base_ordinata.at(iteratore_base) == i) ++iteratore_base;
+        else non_base.push_back(i);
+    }
 }
 
 double Simplesso::calcolo_costo_ridotto(){

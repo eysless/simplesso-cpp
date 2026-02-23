@@ -23,7 +23,7 @@ private:
     const PL&                        pl;
     std::vector<double>              b_barrato{};
     double                           z_barrato{};
-    std::vector<double>              y{};
+    std::vector<double>              y_trasposta{};
     std::vector<std::vector<double>> carry{};
     std::vector<int>                 base{};
     std::vector<int>                 non_base{};
@@ -33,7 +33,8 @@ private:
 public:
     Simplesso(PL& nuovo_pl);
 
-    std::vector<int>    trova_base();
+    void                trova_prima_base();
+    void                fuori_base();
     std::vector<int>    trova_identita();
     double              calcolo_costo_ridotto();
     std::vector<double> calcolo_A_barrata_colonna();
