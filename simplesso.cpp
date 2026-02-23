@@ -24,7 +24,7 @@
             Funzione pivot, da fare solo se il problema non è illimitato e esiste un c barrato < 0
 */
 
-#include <algorithm>
+
 #include <vector>
 #include "simplesso.hpp"
 
